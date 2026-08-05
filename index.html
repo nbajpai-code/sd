@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Reliability & System Design Resource Portal (sd)</title>
+  <meta name="description" content="A comprehensive digital library and interactive learning hub for Site Reliability Engineering (SRE) and distributed system design.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dots-bg">
+
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div>
+        <div class="flex items-center space-x-3 mb-8 border-b border-slate-800 pb-5">
+          <svg class="h-8 w-8 text-blue-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          <div>
+            <h1 class="text-lg font-extrabold text-white tracking-tight">SRE & SysDesign</h1>
+            <p class="text-xs text-slate-500 font-mono">Resource Portal</p>
+          </div>
+        </div>
+        
+        <nav class="space-y-2">
+          <a href="#" data-tab="dashboard" class="flex items-center space-x-3 py-3 px-4 rounded-xl text-sm font-semibold bg-blue-600 text-white transition-all">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
+            </svg>
+            <span>Dashboard Portal</span>
+          </a>
+          <a href="#" data-tab="library" class="flex items-center space-x-3 py-3 px-4 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition-all">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <span>Digital Library</span>
+          </a>
+          <a href="#" data-tab="classroom" class="flex items-center space-x-3 py-3 px-4 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition-all">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span>Simulators & Tools</span>
+          </a>
+          <a href="#" data-tab="museum" class="flex items-center space-x-3 py-3 px-4 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition-all">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 4a2 2 0 00-2-2v3m2-3V9m-2 4h.01M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span>Museum of Outages</span>
+          </a>
+          <a href="#" data-tab="prodverbs" class="flex items-center space-x-3 py-3 px-4 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition-all">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+            </svg>
+            <span>Systems Prodverbs</span>
+          </a>
+          <a href="#" data-tab="incident-sim" class="flex items-center space-x-3 py-3 px-4 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition-all">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <span>Outage Commander Sim</span>
+          </a>
+          <a href="#" data-tab="checklist" class="flex items-center space-x-3 py-3 px-4 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition-all">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Readiness Checklist</span>
+          </a>
+        </nav>
+      </div>
+      
+      <div class="border-t border-slate-800 pt-5 text-center">
+        <p class="text-xs text-slate-500 font-mono">&copy; 2026 Niraj Bajpai</p>
+      </div>
+    </aside>
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Search & Metrics Header -->
+      <header class="flex justify-between items-center mb-8 bg-slate-900/40 border border-slate-700/30 rounded-2xl p-4 backdrop-blur-md">
+        <!-- Search bar -->
+        <div class="relative w-96 flex items-center">
+          <input type="text" id="global-search" placeholder="Search latency, Raft, outages, SLOs..." class="w-full pl-10 pr-10" />
+          <svg class="absolute left-3.5 h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <button id="clear-search-btn" class="absolute right-3 text-slate-500 hover:text-slate-300 font-bold text-xs uppercase cursor-pointer">Clear</button>
+        </div>
+        
+        <!-- Live status bar -->
+        <div class="flex items-center space-x-6">
+          <div class="flex items-center space-x-2">
+            <span class="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+            <span class="text-xs font-bold text-slate-300 font-mono">SYSTEM HEALTH: ONLINE</span>
+          </div>
+          <div class="border-l border-slate-800 h-5"></div>
+          <div class="flex flex-col text-right">
+            <span class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Live Network Uptime</span>
+            <span id="header-uptime-stat" class="text-sm font-mono text-emerald-400 font-bold">99.987%</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Global Search Results Panel -->
+      <section id="search-results" class="hidden space-y-6 animate-fadeIn">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-extrabold text-white">Search Results</h2>
+        </div>
+        <div id="search-results-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Populated dynamically via app.js -->
+        </div>
+      </section>
+
+      <!-- MAIN VIEWS -->
+      <div id="dashboard-main-view">
+        
+        <!-- Dashboard Screen -->
+        <section id="dashboard-screen" class="tab-screen space-y-8">
+          <div class="glass-panel p-8 bg-gradient-to-br from-slate-900/80 to-slate-950/80 border border-slate-700/50 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0 md:mr-8 max-w-xl">
+              <h2 class="text-3xl font-extrabold text-white mb-3">System Design & SRE Portal</h2>
+              <p class="text-slate-400 text-sm md:text-base leading-relaxed">
+                Welcome to your comprehensive resource repository. Built using software engineering guidelines to address operational challenges, this hub contains digital guides, mathematical SLO calculators, interactive load-balancer visualizers, and blameless analysis of historical outages.
+              </p>
+            </div>
+            <div class="flex space-x-4">
+              <button onclick="document.querySelector('[data-tab=library]').click()" class="py-3 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 font-bold text-sm text-white transition-all shadow-lg shadow-blue-500/20">Explore Library</button>
+              <button onclick="document.querySelector('[data-tab=classroom]').click()" class="py-3 px-5 rounded-xl bg-slate-800 hover:bg-slate-700 font-bold text-sm text-slate-200 border border-slate-700 transition-all">Launch Simulators</button>
+            </div>
+          </div>
+
+          <!-- Main Core Metrics Indicators Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- SLO Card -->
+            <div class="glass-panel p-6 border border-slate-700/30 flex flex-col justify-between min-h-[220px]">
+              <div>
+                <div class="flex justify-between items-center mb-4">
+                  <span class="text-xs font-bold text-blue-400 uppercase tracking-widest font-mono">Service Level Objective</span>
+                  <svg class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2" /></svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">SLO & Error Budget</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Defining the reliability boundaries for services. If availability stays above the target SLO, features ship. If budget is burned, deployment freezes trigger.</p>
+              </div>
+              <a href="#" onclick="document.querySelector('[data-tab=classroom]').click()" class="text-xs font-semibold text-blue-400 mt-4 flex items-center space-x-1 hover:text-blue-300">
+                <span>Configure SLOs</span>
+                <span class="font-mono">&rarr;</span>
+              </a>
+            </div>
+
+            <!-- Failure isolation Card -->
+            <div class="glass-panel p-6 border border-slate-700/30 flex flex-col justify-between min-h-[220px]">
+              <div>
+                <div class="flex justify-between items-center mb-4">
+                  <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest font-mono">Fault Tolerance</span>
+                  <svg class="h-6 w-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Resiliency Patterns</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Preventing localized errors from creating cascading outages. Learn how rate limiting, timeouts, exponential backoffs, and circuit breakers protect system bounds.</p>
+              </div>
+              <a href="#" onclick="openChapterReader('ds-foundations', 'ds-ch4')" class="text-xs font-semibold text-emerald-400 mt-4 flex items-center space-x-1 hover:text-emerald-300">
+                <span>Read Guide</span>
+                <span class="font-mono">&rarr;</span>
+              </a>
+            </div>
+
+            <!-- Incident Command Card -->
+            <div class="glass-panel p-6 border border-slate-700/30 flex flex-col justify-between min-h-[220px]">
+              <div>
+                <div class="flex justify-between items-center mb-4">
+                  <span class="text-xs font-bold text-rose-400 uppercase tracking-widest font-mono">Incident Ops</span>
+                  <svg class="h-6 w-6 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Incident Commander</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Step into the shoes of an Incident Commander. Manage developer stress, public relations pressure, and system failures in real-time during a simulated P0 outage.</p>
+              </div>
+              <a href="#" onclick="document.querySelector('[data-tab=incident-sim]').click()" class="text-xs font-semibold text-rose-400 mt-4 flex items-center space-x-1 hover:text-rose-300">
+                <span>Launch Sim</span>
+                <span class="font-mono">&rarr;</span>
+              </a>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Library Screen -->
+        <section id="library-screen" class="tab-screen hidden space-y-6">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+            <div>
+              <h2 class="text-3xl font-extrabold text-white">Digital Library</h2>
+              <p class="text-slate-400 text-sm mt-1">Curated books covering distributed systems engineering, site reliability operations, and secure architecture designs.</p>
+            </div>
+          </div>
+          <div id="books-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Loaded dynamically from contentData -->
+          </div>
+        </section>
+        
+        <!-- Classroom (Simulators) Screen -->
+        <section id="classroom-screen" class="tab-screen hidden space-y-12">
+          
+          <!-- Tab Title -->
+          <div>
+            <h2 class="text-3xl font-extrabold text-white">Simulators & SRE Tools</h2>
+            <p class="text-slate-400 text-sm mt-1">Hands-on interactive environments to test routing topologies and calculate real-world reliability metrics.</p>
+          </div>
+          
+          <!-- LOAD BALANCER SIMULATOR CONTAINER -->
+          <div class="glass-panel p-6 border border-slate-700/40 space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b border-slate-800">
+              <div>
+                <h3 class="text-xl font-bold text-white">Interactive Load Balancer & Traffic Simulator</h3>
+                <p class="text-xs text-slate-500 mt-1">Observe client requests route dynamically to healthy and degraded server replicas.</p>
+              </div>
+              
+              <!-- Control Panels -->
+              <div class="flex flex-wrap gap-3 mt-4 md:mt-0">
+                <!-- Routing algorithm select -->
+                <div class="flex flex-col">
+                  <label class="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-1">Routing Algorithm</label>
+                  <select id="lb-algorithm" class="py-1.5 px-3">
+                    <option value="round-robin">Round Robin</option>
+                    <option value="least-conn">Least Connections</option>
+                    <option value="random">Random Selection</option>
+                  </select>
+                </div>
+                
+                <!-- Traffic rate select -->
+                <div class="flex flex-col">
+                  <label class="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-1">Traffic Rate</label>
+                  <select id="traffic-rate" class="py-1.5 px-3">
+                    <option value="0">Off (Manual)</option>
+                    <option value="1">Slow (1.2s)</option>
+                    <option value="2">Medium (0.5s)</option>
+                    <option value="3">Fast (0.15s)</option>
+                  </select>
+                </div>
+                
+                <!-- Send/Reset actions -->
+                <div class="flex items-end space-x-2">
+                  <button id="send-single-req" class="py-2 px-4 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md">Send Request</button>
+                  <button id="reset-lb-stats" class="py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition-all">Reset Stats</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+              <!-- Simulator Canvas -->
+              <div class="lg:col-span-3 bg-slate-950/70 border border-slate-800/80 rounded-xl overflow-hidden flex justify-center items-center p-2 shadow-inner">
+                <canvas id="lb-canvas" width="800" height="450" class="w-full max-w-[800px] h-auto aspect-[16/9] block"></canvas>
+              </div>
+              
+              <!-- Metrics & Status Panels -->
+              <div class="space-y-6">
+                <!-- System Dashboard metrics -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 space-y-4">
+                  <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Gateway Statistics</h4>
+                  
+                  <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-950/40 p-2.5 rounded border border-slate-800">
+                      <span class="text-[10px] text-slate-500 font-semibold block uppercase">Total Requests</span>
+                      <span id="lb-total-reqs" class="text-lg font-mono font-bold text-white">0</span>
+                    </div>
+                    <div class="bg-slate-950/40 p-2.5 rounded border border-slate-800">
+                      <span class="text-[10px] text-slate-500 font-semibold block uppercase">Success OK</span>
+                      <span id="lb-success-reqs" class="text-lg font-mono font-bold text-emerald-400">0</span>
+                    </div>
+                    <div class="bg-slate-950/40 p-2.5 rounded border border-slate-800">
+                      <span class="text-[10px] text-slate-500 font-semibold block uppercase">Failures 50x</span>
+                      <span id="lb-failed-reqs" class="text-lg font-mono font-bold text-rose-400">0</span>
+                    </div>
+                    <div class="bg-slate-950/40 p-2.5 rounded border border-slate-800">
+                      <span class="text-[10px] text-slate-500 font-semibold block uppercase">Success Rate</span>
+                      <span id="lb-uptime-rate" class="text-lg font-mono font-bold text-emerald-400">100.00%</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Server Nodes list controls -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 space-y-3">
+                  <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Replica Health Controls</h4>
+                  
+                  <!-- Server A -->
+                  <div class="border-b border-slate-800 pb-3 last:border-0 last:pb-0">
+                    <div class="flex justify-between items-center mb-2">
+                      <span class="text-xs font-bold text-slate-200">Server Alpha (A)</span>
+                      <span id="server-node-status-a" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-400">ONLINE</span>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-slate-400 mb-2 font-mono">
+                      <span>Active: <span id="server-a-active" class="font-bold">0</span></span>
+                      <span>Total: <span id="server-a-processed" class="font-bold">0</span></span>
+                      <span>Failures: <span id="server-a-errors" class="font-bold">0</span></span>
+                    </div>
+                    <div class="flex space-x-2">
+                      <button id="toggle-server-a" class="flex-1 py-1.5 px-2 rounded bg-emerald-500 hover:bg-rose-600 text-white font-bold text-[10px] transition-colors">Fail Server</button>
+                      <select id="latency-server-a" class="py-1 px-2 text-[10px] bg-slate-950">
+                        <option value="150">150ms (Fast)</option>
+                        <option value="300" selected>300ms (Norm)</option>
+                        <option value="800">800ms (Slow)</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <!-- Server B -->
+                  <div class="border-b border-slate-800 pb-3 last:border-0 last:pb-0">
+                    <div class="flex justify-between items-center mb-2">
+                      <span class="text-xs font-bold text-slate-200">Server Beta (B)</span>
+                      <span id="server-node-status-b" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-400">ONLINE</span>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-slate-400 mb-2 font-mono">
+                      <span>Active: <span id="server-b-active" class="font-bold">0</span></span>
+                      <span>Total: <span id="server-b-processed" class="font-bold">0</span></span>
+                      <span>Failures: <span id="server-b-errors" class="font-bold">0</span></span>
+                    </div>
+                    <div class="flex space-x-2">
+                      <button id="toggle-server-b" class="flex-1 py-1.5 px-2 rounded bg-emerald-500 hover:bg-rose-600 text-white font-bold text-[10px] transition-colors">Fail Server</button>
+                      <select id="latency-server-b" class="py-1 px-2 text-[10px] bg-slate-950">
+                        <option value="300">300ms (Fast)</option>
+                        <option value="600" selected>600ms (Norm)</option>
+                        <option value="1200">1200ms (Slow)</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <!-- Server C -->
+                  <div class="border-b border-slate-800 pb-3 last:border-0 last:pb-0">
+                    <div class="flex justify-between items-center mb-2">
+                      <span class="text-xs font-bold text-slate-200">Server Gamma (C)</span>
+                      <span id="server-node-status-c" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-400">ONLINE</span>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-slate-400 mb-2 font-mono">
+                      <span>Active: <span id="server-c-active" class="font-bold">0</span></span>
+                      <span>Total: <span id="server-c-processed" class="font-bold">0</span></span>
+                      <span>Failures: <span id="server-c-errors" class="font-bold">0</span></span>
+                    </div>
+                    <div class="flex space-x-2">
+                      <button id="toggle-server-c" class="flex-1 py-1.5 px-2 rounded bg-emerald-500 hover:bg-rose-600 text-white font-bold text-[10px] transition-colors">Fail Server</button>
+                      <select id="latency-server-c" class="py-1 px-2 text-[10px] bg-slate-950">
+                        <option value="200">200ms (Fast)</option>
+                        <option value="450" selected>450ms (Norm)</option>
+                        <option value="900">900ms (Slow)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- SLO CALCULATOR CONTAINER -->
+          <div class="glass-panel p-6 border border-slate-700/40 space-y-6">
+            <div class="pb-4 border-b border-slate-800">
+              <h3 class="text-xl font-bold text-white">SLO & Error Budget Downtime Calculator</h3>
+              <p class="text-xs text-slate-500 mt-1">Compute allowed system downtime per window and check your remaining error budgets.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <!-- Inputs Panel -->
+              <div class="bg-slate-900/50 border border-slate-850 p-6 rounded-xl space-y-6">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Calculator Settings</h4>
+                
+                <!-- Target Slider -->
+                <div class="space-y-2">
+                  <div class="flex justify-between items-center text-sm font-semibold">
+                    <label class="text-slate-300">Target SLO (Availability Target %)</label>
+                    <div class="flex items-center space-x-1">
+                      <input type="number" id="slo-target-val" min="90" max="99.999" step="0.001" value="99.9" class="w-20 text-center py-1 px-1.5 font-mono font-bold text-xs" />
+                      <span class="text-slate-400 text-xs">%</span>
+                    </div>
+                  </div>
+                  <input type="range" id="slo-target-slider" min="95" max="99.999" step="0.001" value="99.9" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500" />
+                  <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                    <span>95.0%</span>
+                    <span>99.0%</span>
+                    <span>99.9%</span>
+                    <span>99.99%</span>
+                    <span>99.999%</span>
+                  </div>
+                </div>
+                
+                <!-- Monthly Traffic Input -->
+                <div class="flex flex-col space-y-1.5">
+                  <label class="text-sm font-semibold text-slate-300">Total Monthly Requests (Traffic volume)</label>
+                  <input type="number" id="slo-requests-input" value="10000000" min="1000" class="font-mono" />
+                </div>
+                
+                <!-- Active Error Counter -->
+                <div class="flex flex-col space-y-1.5">
+                  <label class="text-sm font-semibold text-slate-300">Active Failed Requests (Errors this month)</label>
+                  <input type="number" id="slo-current-errors" value="1250" min="0" class="font-mono text-rose-400 border-rose-500/20" />
+                </div>
+              </div>
+              
+              <!-- Outputs Panel -->
+              <div class="bg-slate-900/50 border border-slate-850 p-6 rounded-xl space-y-6">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Calculated Metrics</h4>
+                
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="bg-slate-950/40 p-3 rounded border border-slate-800/80">
+                    <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Error Budget Allowance</span>
+                    <span id="slo-budget-percentage" class="text-xl font-bold font-mono text-white">0.1000%</span>
+                  </div>
+                  <div class="bg-slate-950/40 p-3 rounded border border-slate-800/80">
+                    <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Allowed Error Count</span>
+                    <span id="slo-req-budget" class="text-xl font-bold font-mono text-white">10,000</span>
+                  </div>
+                  <div class="bg-slate-950/40 p-3 rounded border border-slate-800/80">
+                    <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Budget Burned Ratio</span>
+                    <span id="slo-budget-burned" class="text-xl font-bold font-mono text-rose-400">12.5%</span>
+                  </div>
+                  <div class="bg-slate-950/40 p-3 rounded border border-slate-800/80">
+                    <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Uptime Window Target</span>
+                    <span class="text-xl font-bold font-mono text-emerald-400">Rolling 30-Day</span>
+                  </div>
+                </div>
+                
+                <!-- Allowed Downtime Periods -->
+                <div class="bg-slate-950/50 border border-slate-850/80 p-4 rounded-lg space-y-2">
+                  <h5 class="text-[10px] text-slate-400 uppercase tracking-wider font-bold mb-2">Max Allowed Service Downtime</h5>
+                  <div class="grid grid-cols-4 gap-2 text-center text-xs font-mono">
+                    <div class="border-r border-slate-800 pr-1">
+                      <span class="text-slate-500 block text-[9px] uppercase font-bold">1 Day</span>
+                      <span id="slo-downtime-day" class="text-slate-200 font-bold">86.4 sec</span>
+                    </div>
+                    <div class="border-r border-slate-800 pr-1">
+                      <span class="text-slate-500 block text-[9px] uppercase font-bold">1 Week</span>
+                      <span id="slo-downtime-week" class="text-slate-200 font-bold">10.1 min</span>
+                    </div>
+                    <div class="border-r border-slate-800 pr-1">
+                      <span class="text-slate-500 block text-[9px] uppercase font-bold">1 Month</span>
+                      <span id="slo-downtime-month" class="text-slate-200 font-bold">43.8 min</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-500 block text-[9px] uppercase font-bold">1 Year</span>
+                      <span id="slo-downtime-year" class="text-slate-200 font-bold">8.8 hrs</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Action Verdict -->
+                <div id="slo-status-verdict" class="p-3 rounded-lg text-sm font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  HEALTHY: System is operating well within reliability tolerances.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Museum Screen -->
+        <section id="museum-screen" class="tab-screen hidden space-y-6">
+          <div>
+            <h2 class="text-3xl font-extrabold text-white">Museum of Broken Architectures (MOBA)</h2>
+            <p class="text-slate-400 text-sm mt-1">Retrospective breakdowns of famous high-severity outages in modern systems history.</p>
+          </div>
+          <div id="museum-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Loaded dynamically from contentData -->
+          </div>
+        </section>
+        
+        <!-- Prodverbs Screen -->
+        <section id="prodverbs-screen" class="tab-screen hidden space-y-12">
+          <div>
+            <h2 class="text-3xl font-extrabold text-white">Systems Prodverbs</h2>
+            <p class="text-slate-400 text-sm mt-1">Bite-sized architectural wisdom and operational site reliability principles.</p>
+          </div>
+          
+          <!-- Random Widget Card -->
+          <div class="glass-panel p-8 bg-gradient-to-r from-blue-950/20 to-slate-900/60 border border-blue-500/10 rounded-2xl flex flex-col md:flex-row justify-between items-center max-w-4xl mx-auto shadow-2xl">
+            <div class="mb-6 md:mb-0 md:mr-8 flex-1">
+              <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest font-mono block mb-2">Random SRE Quote</span>
+              <p id="random-prodverb-quote" class="text-xl md:text-2xl text-slate-100 font-semibold italic font-serif leading-relaxed mb-3">"Hope is not a strategy."</p>
+              <p id="random-prodverb-author" class="text-xs font-mono text-slate-500 uppercase tracking-wider font-bold">Benjamin Treynor Sloss</p>
+            </div>
+            <button id="gen-random-prodverb" class="py-3.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-all shadow-md shadow-blue-500/10 shrink-0">Another proverb</button>
+          </div>
+          
+          <!-- All Prodverbs Grid -->
+          <div id="prodverbs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Loaded dynamically -->
+          </div>
+        </section>
+        
+        <!-- Incident Commander Screen -->
+        <section id="incident-sim-screen" class="tab-screen hidden space-y-6">
+          <div>
+            <h2 class="text-3xl font-extrabold text-white">Incident Commander Bridge</h2>
+            <p class="text-slate-400 text-sm mt-1">Lead your team under operational fire. Respond to incident events, mitigate failures, and resolve the outage.</p>
+          </div>
+          <div id="incident-sim-container">
+            <!-- Populated dynamically via incidentSim.js -->
+          </div>
+        </section>
+        
+        <!-- Checklist Screen -->
+        <section id="checklist-screen" class="tab-screen hidden space-y-6">
+          <div>
+            <h2 class="text-3xl font-extrabold text-white">Production Readiness Checklist</h2>
+            <p class="text-slate-400 text-sm mt-1">Ensure your services meet core stability, observability, and capacity standards before going live.</p>
+          </div>
+          <div id="checklist-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Populated dynamically from contentData -->
+          </div>
+        </section>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- BOOK CHAPTER READER MODAL OVERLAY -->
+  <div id="reader-modal" class="modal-overlay hidden">
+    <div class="modal-content chapter-view">
+      <!-- Modal Header -->
+      <div class="sticky top-0 bg-slate-900 border-b border-slate-800 p-5 flex justify-between items-center z-10">
+        <div>
+          <span id="modal-book-title" class="text-xs font-bold text-blue-400 uppercase tracking-widest font-mono">Book Title</span>
+          <h3 id="modal-chapter-title" class="text-xl font-bold text-white mt-1">Chapter Title</h3>
+        </div>
+        <button onclick="closeChapterReader()" class="text-slate-400 hover:text-white font-bold text-sm uppercase px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors">Close</button>
+      </div>
+      
+      <!-- Modal Body Content -->
+      <div id="modal-body-content" class="p-8 chapter-reading-pane">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTAGE ANALYSIS MODAL OVERLAY -->
+  <div id="outage-modal" class="modal-overlay hidden">
+    <div class="modal-content max-w-4xl">
+      <!-- Modal Header -->
+      <div class="sticky top-0 bg-slate-900 border-b border-slate-800 p-5 flex justify-between items-center z-10">
+        <div>
+          <span class="text-xs font-bold text-rose-400 uppercase tracking-widest font-mono">Historical Retrospective Outage</span>
+          <h3 id="outage-modal-title" class="text-xl font-bold text-white mt-1">Outage Title</h3>
+        </div>
+        <button onclick="closeOutageModal()" class="text-slate-400 hover:text-white font-bold text-sm uppercase px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors">Close</button>
+      </div>
+      
+      <!-- Modal Body Content -->
+      <div class="p-6 md:p-8 space-y-6">
+        <div>
+          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Operational Summary</h4>
+          <p id="outage-modal-summary" class="text-sm text-slate-300 leading-relaxed bg-slate-950/40 p-4 rounded-lg border border-slate-850"></p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Timeline -->
+          <div class="bg-slate-950/40 p-5 rounded-lg border border-slate-850 space-y-4">
+            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest pb-2 border-b border-slate-850">Timeline of Events</h4>
+            <div id="outage-modal-timeline" class="space-y-3">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+          
+          <!-- Causes & Lessons -->
+          <div class="space-y-6">
+            <div class="bg-slate-950/40 p-5 rounded-lg border border-slate-850">
+              <h4 class="text-xs font-bold text-rose-400 uppercase tracking-widest mb-2">Root Cause Analysis</h4>
+              <p id="outage-modal-cause" class="text-xs md:text-sm text-slate-300 leading-relaxed"></p>
+            </div>
+            
+            <div class="bg-slate-950/40 p-5 rounded-lg border border-slate-850">
+              <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-3">SRE Action Item Lessons</h4>
+              <ul id="outage-modal-lessons" class="space-y-2.5">
+                <!-- Rendered dynamically -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script Modules -->
+  <script src="contentData.js"></script>
+  <script src="simulators.js"></script>
+  <script src="incidentSim.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
