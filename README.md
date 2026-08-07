@@ -31,10 +31,15 @@ Welcome to the **Site Reliability & System Design Resource Portal**, a comprehen
 6. **Production Readiness Checklist**
    - A structured checklist tool to audit services across architecture, capacity, alerting telemetry, and incident readiness before shipping to production.
 
-7. **[CAP Theorem Comprehensive Guide](cap-theorem/README.md)** *(NEW)*
+7. **[CAP Theorem Comprehensive Guide](cap-theorem/README.md)**
    - Complete coverage of the CAP theorem: formal proof origins, the three guarantees explained, CP vs AP system classifications, and the PACELC extension.
    - [Decision Framework & Cheat Sheet](cap-theorem/cheat-sheet.md) — quick-reference decision trees, quorum math, consensus protocol comparison, and interview patterns.
    - [Real-World Database Deep Dives](cap-theorem/database-deep-dives.md) — production-level analysis of Cassandra, Spanner, DynamoDB, etcd, MongoDB, and CockroachDB with architecture diagrams and configuration details.
+
+8. **Kubernetes Batch Computing & Job Orchestration** *(NEW — inspired by [Netflix Kueue Tech Blog](https://netflixtechblog.com/))*
+   - Four-chapter book covering batch vs. service workloads, Kueue architecture (ClusterQueue, LocalQueue, ResourceFlavor, Cohort), preemption & fair sharing, and the Netflix CMB-to-Kueue migration case study.
+   - New Museum of Outages entry: *"The Batch Quota Exhaustion Cascade"* — a composite case study on resource starvation in batch systems lacking preemption.
+   - Five new Systems Prodverbs on batch computing, resource management, and multi-tenant infrastructure economics.
 
 ---
 

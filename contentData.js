@@ -280,6 +280,153 @@ const contentData = {
           `
         }
       ]
+    },
+    {
+      id: "k8s-batch-orchestration",
+      title: "Kubernetes Batch Computing & Job Orchestration",
+      subtitle: "Simplifying Large-Scale Batch Workloads with Cloud-Native Primitives",
+      author: "Niraj Bajpai",
+      description: "Inspired by Netflix's migration from custom batch compute to Kueue, this book explores Kubernetes-native job queuing, multi-tenant resource management, preemption-based fair sharing, and production migration strategies.",
+      chapters: [
+        {
+          id: "k8s-batch-ch1",
+          title: "Chapter 1: Batch vs. Service Workloads on Kubernetes",
+          content: `
+            <h3>Two Fundamental Workload Patterns</h3>
+            <p>Kubernetes was originally designed for <strong>long-running service workloads</strong>—web servers, API gateways, and microservices that run indefinitely, serving requests until explicitly stopped. However, modern infrastructure increasingly demands support for <strong>batch workloads</strong>—finite, compute-intensive jobs that run to completion and then terminate.</p>
+
+            <h4>Characteristics of Batch Workloads</h4>
+            <ul>
+              <li><strong>Finite Execution:</strong> Batch jobs have a clear start and end. They process a dataset, train a model, encode a video, or run a simulation—then exit.</li>
+              <li><strong>Bursty Resource Demand:</strong> Batch pipelines often spike during specific windows (nightly ETL, weekly model retraining, content encoding after new releases) and idle otherwise.</li>
+              <li><strong>Tolerance for Delay:</strong> Unlike user-facing services with strict latency SLOs, batch jobs can often tolerate queuing delays of minutes or even hours, as long as they complete within a deadline.</li>
+              <li><strong>Massive Parallelism:</strong> Large batch pipelines may spawn hundreds or thousands of parallel workers (e.g., MapReduce-style fanout), requiring coordinated resource allocation.</li>
+            </ul>
+
+            <h4>Kubernetes Native Primitives for Batch</h4>
+            <p>Kubernetes provides two core primitives for batch workloads:</p>
+            <ul>
+              <li><strong>Job:</strong> Runs one or more Pods to completion. Supports parallelism (<code>spec.parallelism</code>), completion count (<code>spec.completions</code>), and configurable backoff limits for retries. The Job controller ensures the specified number of Pods successfully terminate.</li>
+              <li><strong>CronJob:</strong> A time-based scheduler that creates Jobs on a recurring schedule (e.g., <code>0 2 * * *</code> for daily 2 AM runs). Useful for periodic ETL, report generation, and maintenance tasks.</li>
+            </ul>
+
+            <h4>The Challenge: Batch at Scale</h4>
+            <p>While Jobs and CronJobs handle individual batch workloads, they lack critical capabilities for running batch <em>at enterprise scale</em>:</p>
+            <ul>
+              <li><strong>Resource Starvation:</strong> Without admission control, a flood of batch jobs can consume all cluster resources, starving higher-priority services.</li>
+              <li><strong>Noisy Neighbor Problem:</strong> In multi-tenant clusters, one team's massive encoding pipeline can block another team's time-sensitive ML training jobs.</li>
+              <li><strong>No Fair Scheduling:</strong> Kubernetes' default scheduler assigns Pods to nodes based on resource fit, not organizational quotas or fairness policies.</li>
+              <li><strong>No Queuing:</strong> If resources are unavailable, Pods enter a <code>Pending</code> state indefinitely. There is no ordered queue, no priority-based admission, and no capacity reservation.</li>
+            </ul>
+            <p>These gaps are exactly what drove Netflix—and other hyperscalers—to build custom batch management systems, and eventually migrate to purpose-built solutions like <strong>Kueue</strong>.</p>
+          `
+        },
+        {
+          id: "k8s-batch-ch2",
+          title: "Chapter 2: Kueue — Kubernetes-Native Job Queuing",
+          content: `
+            <h3>What is Kueue?</h3>
+            <p><strong>Kueue</strong> is a Kubernetes-native job queuing system that manages when jobs are admitted to run based on available resource quotas. It acts as an <strong>admission controller</strong>—it does not replace the kube-scheduler or the Job controller. Instead, it holds jobs in a queue and only releases them when the cluster has sufficient capacity, preventing resource contention and enabling multi-tenant fairness.</p>
+
+            <h4>Core Architecture Components</h4>
+            <ul>
+              <li><strong>Workload:</strong> The atomic unit of admission in Kueue. When a Kubernetes Job is created, Kueue wraps it in a <code>Workload</code> object that tracks its resource requirements, queue assignment, and admission status. The Workload remains suspended until Kueue admits it.</li>
+              <li><strong>ClusterQueue:</strong> A cluster-scoped resource that defines a pool of available resources (CPU, memory, GPU). Platform administrators configure ClusterQueues with resource quotas, preemption policies, and fair sharing rules. Think of it as the "resource bank" that decides how much capacity each tenant can consume.</li>
+              <li><strong>LocalQueue:</strong> A namespace-scoped resource that serves as the user-facing submission point. Engineers submit jobs to their team's LocalQueue, which then routes them to a parent ClusterQueue. This separation lets platform teams centralize policy while giving users a simple interface.</li>
+              <li><strong>ResourceFlavor:</strong> Represents a class of compute hardware—for example, <code>spot-instances</code>, <code>on-demand-instances</code>, <code>a100-gpu</code>, or <code>t4-gpu</code>. ClusterQueues reference ResourceFlavors to define how much of each hardware type is available, enabling heterogeneous capacity management.</li>
+              <li><strong>Cohort:</strong> A grouping mechanism that links multiple ClusterQueues together. ClusterQueues within the same Cohort can dynamically borrow unused capacity from each other, maximizing overall utilization. If Team A's ClusterQueue has idle resources, Team B's jobs can temporarily borrow that capacity.</li>
+            </ul>
+
+            <h4>Admission Flow</h4>
+            <p>The Kueue admission flow follows a clear sequence:</p>
+            <ol>
+              <li>A user creates a Kubernetes Job in their namespace. The Job references a <code>LocalQueue</code> via a label.</li>
+              <li>Kueue intercepts the Job, creates a <code>Workload</code> object, and suspends the Job (sets <code>spec.suspend: true</code>).</li>
+              <li>The Kueue controller evaluates the Workload against the associated ClusterQueue's quota and any active Cohort borrowing policies.</li>
+              <li>When sufficient capacity is available (and no higher-priority Workloads are ahead in the queue), Kueue admits the Workload by unsuspending the Job.</li>
+              <li>The standard kube-scheduler then handles Pod-to-Node placement as usual.</li>
+            </ol>
+
+            <h4>Key Design Principle: Separation of Concerns</h4>
+            <p>Kueue deliberately separates <strong>admission</strong> ("should this job run now?") from <strong>scheduling</strong> ("which node should this Pod go to?"). This preserves compatibility with existing schedulers, custom scheduling profiles, and node affinity rules. It is why Netflix chose Kueue—their existing Titus scheduler profiles continued to work unchanged.</p>
+          `
+        },
+        {
+          id: "k8s-batch-ch3",
+          title: "Chapter 3: Preemption, Fair Sharing & Resource Flavors",
+          content: `
+            <h3>Beyond First-Come-First-Served</h3>
+            <p>A naive batch system admits jobs in the order they arrive. This creates a fundamental problem: a massive, low-priority encoding pipeline that arrives first can consume all available capacity, blocking a critical, high-priority ML training job that arrives minutes later. <strong>Preemption</strong> and <strong>fair sharing</strong> solve this by introducing dynamic resource reclamation.</p>
+
+            <h4>Preemption in Kueue</h4>
+            <p>Preemption is the ability to evict running lower-priority workloads to free resources for higher-priority ones. Kueue supports configurable preemption policies at the ClusterQueue level:</p>
+            <ul>
+              <li><strong>Within ClusterQueue:</strong> Higher-priority workloads can preempt lower-priority workloads within the same queue. Configured via <code>preemption.withinClusterQueue</code>.</li>
+              <li><strong>Reclaim from Borrowers:</strong> When a ClusterQueue has lent capacity to a Cohort neighbor and needs it back for its own workloads, it can reclaim borrowed resources by evicting the borrowing workloads. Configured via <code>preemption.reclaimWithinCohort</code>.</li>
+              <li><strong>Priority-Based Ordering:</strong> Kueue uses Kubernetes <code>PriorityClass</code> values to determine eviction order. A workload with priority 1000 can preempt one with priority 100, but not vice versa.</li>
+            </ul>
+
+            <h4>Fair Sharing Across Tenants</h4>
+            <p>Fair sharing ensures equitable distribution of cluster resources among competing tenants, preventing any single team from monopolizing capacity:</p>
+            <ul>
+              <li><strong>Guaranteed Quota:</strong> Each ClusterQueue defines a <code>nominalQuota</code>—the guaranteed minimum capacity that tenant always has access to, regardless of other tenants' demand.</li>
+              <li><strong>Borrowing Limit:</strong> The <code>borrowingLimit</code> caps how much additional capacity a ClusterQueue can borrow from its Cohort above its guaranteed quota.</li>
+              <li><strong>Lending Limit:</strong> The <code>lendingLimit</code> controls how much of a ClusterQueue's idle guaranteed capacity can be lent to Cohort neighbors.</li>
+              <li><strong>Weighted Fair Sharing:</strong> Administrators assign weights to ClusterQueues within a Cohort. A queue with weight 2 gets twice the proportional share of a queue with weight 1 during contention.</li>
+            </ul>
+
+            <h4>ResourceFlavors for Heterogeneous Hardware</h4>
+            <p>Modern clusters run mixed hardware: on-demand VMs, spot/preemptible instances, various GPU models (A100, T4, H100), and ARM vs. x86 nodes. ResourceFlavors let administrators model this heterogeneity:</p>
+            <ul>
+              <li>Define a <code>ResourceFlavor</code> for each hardware class (e.g., <code>spot-cpu</code>, <code>ondemand-cpu</code>, <code>a100-gpu</code>).</li>
+              <li>In the ClusterQueue, specify quota per ResourceFlavor: "Team ML gets 100 A100 GPUs and 500 on-demand CPUs."</li>
+              <li>Kueue tries to admit workloads to the most preferred flavor first (cost optimization), falling back to alternatives if the preferred flavor is exhausted.</li>
+            </ul>
+            <p>This architecture enables sophisticated cost-aware scheduling: batch jobs default to cheap spot instances, while production-critical training jobs get guaranteed on-demand capacity.</p>
+          `
+        },
+        {
+          id: "k8s-batch-ch4",
+          title: "Chapter 4: Netflix Case Study — CMB to Kueue Migration",
+          content: `
+            <h3>Background: Netflix Titus & Compute Managed Batch (CMB)</h3>
+            <p>Netflix operates <strong>Titus</strong>, a proprietary container management platform built on top of the JVM and integrated with AWS. Titus handles millions of container executions daily—spanning streaming encoding, recommendation model training, A/B test analytics, and data pipeline ETL.</p>
+            <p>In 2018, Netflix built <strong>Compute Managed Batch (CMB)</strong>, a custom job queuing system for Titus. CMB provided tenant hierarchies, priority queues, and capacity reservations. It served Netflix well for years, but as the platform scaled, critical limitations emerged.</p>
+
+            <h4>Why CMB Had to Go</h4>
+            <ul>
+              <li><strong>No Preemption:</strong> CMB enforced fair sharing only at admission time. Once a job was admitted and running, it held its resources until completion—even if a higher-priority job was waiting. This meant low-priority encoding jobs could block critical ML pipelines for hours.</li>
+              <li><strong>Maintenance Burden:</strong> CMB was a custom, in-house system with no external contributors. Every feature (new scheduling policies, quota models, observability integrations) had to be built, tested, and maintained by a small internal team.</li>
+              <li><strong>No Capacity Borrowing:</strong> Unused capacity in one tenant's allocation sat idle rather than being dynamically lent to other tenants, resulting in significant resource waste across the fleet.</li>
+            </ul>
+
+            <h4>Why Kueue Over Alternatives</h4>
+            <p>Netflix evaluated three Kubernetes-native batch solutions:</p>
+            <ul>
+              <li><strong>Volcano:</strong> A comprehensive batch system with its own scheduler. Rejected because it would have required Netflix to abandon their existing, heavily-tuned Titus scheduler profiles.</li>
+              <li><strong>YuniKorn:</strong> A resource scheduler for big data workloads. Rejected for similar scheduler-replacement concerns and a less flexible multi-tenant quota model.</li>
+              <li><strong>Kueue:</strong> Selected because it operates as an admission controller—<em>not</em> a scheduler replacement. Netflix's Titus scheduler profiles continued to work unchanged. Kueue also provided the exact primitives Netflix needed: ClusterQueues for tenants, ResourceFlavors for capacity, and Cohorts for borrowing.</li>
+            </ul>
+
+            <h4>The Migration: Mapping Legacy to Kueue</h4>
+            <p>Netflix mapped their existing CMB concepts directly to Kueue primitives:</p>
+            <ul>
+              <li><strong>Internal Tenants → Cohorts:</strong> High-level organizational groupings (e.g., "Encoding", "Data Science") became Kueue Cohorts, enabling cross-team capacity borrowing.</li>
+              <li><strong>Leaf Tenants → ClusterQueue + LocalQueue Pairs:</strong> Individual teams within an organization each received a ClusterQueue (defining their quota) and a LocalQueue (their submission interface).</li>
+              <li><strong>Capacity Configurations → ResourceFlavors + Quotas:</strong> Reserved capacity blocks were translated into ResourceFlavors (e.g., <code>reserved-gpu</code>, <code>spot-cpu</code>) with corresponding quota limits on each ClusterQueue.</li>
+            </ul>
+
+            <h4>Results & Outcomes</h4>
+            <ul>
+              <li><strong>4-Week Migration:</strong> The production migration—covering millions of batch jobs—was completed in approximately four weeks with zero user-facing API changes.</li>
+              <li><strong>Transparent to Users:</strong> Engineers continued submitting jobs through the same Titus APIs. The queuing backend changed, but the interface did not.</li>
+              <li><strong>Improved Utilization:</strong> With preemption-based fair sharing and cohort-level borrowing, average compute utilization increased significantly. Reserved capacity that previously sat idle was now dynamically shared.</li>
+              <li><strong>Reduced Operational Overhead:</strong> By adopting a community-supported CNCF project, Netflix retired thousands of lines of custom queuing logic and gained access to a global contributor ecosystem for bug fixes, features, and integrations.</li>
+            </ul>
+            <p>The Netflix Kueue migration demonstrates a recurring production engineering principle: <strong>prefer well-maintained community standards over custom solutions</strong>, especially when the custom system's complexity outgrows the team's ability to evolve it.</p>
+          `
+        }
+      ]
     }
   ],
   
@@ -365,6 +512,28 @@ const contentData = {
         "<strong>Isolated Out-of-Band Access:</strong> Maintain physically independent networks for emergency administrator access.",
         "<strong>Physical Outage Playbooks:</strong> Ensure datacenter access, keys, and credentials work during total network blackouts."
       ]
+    },
+    {
+      id: "batch-quota-exhaustion",
+      title: "The Batch Quota Exhaustion Cascade",
+      date: "2023 (Composite Case Study)",
+      impact: "Critical ML recommendation pipeline blocked for 14 hours; degraded personalization for 40M+ users during peak viewing hours.",
+      summary: "A massive content encoding pipeline consumed all reserved batch compute capacity under a first-come-first-served queuing system that lacked preemption. Higher-priority ML recommendation model retraining jobs were starved of resources for the entire overnight window, causing stale recommendation models to serve during the next day's peak traffic.",
+      timeline: [
+        { time: "18:00 UTC", event: "Content operations triggers encoding of 2,400 new titles across 35 languages and 12 resolution profiles. The batch system admits all encoding jobs, consuming 100% of reserved GPU and CPU capacity." },
+        { time: "20:00 UTC", event: "Scheduled ML recommendation model retraining pipeline submits 800 jobs. All jobs enter PENDING state — no resources available. The legacy queuing system has no preemption capability." },
+        { time: "22:00 UTC", event: "On-call SRE notices ML jobs are queued. Manual escalation begins, but there is no mechanism to evict lower-priority encoding jobs without killing them entirely (losing hours of partial progress)." },
+        { time: "02:00 UTC", event: "Engineering leadership approves manual kill of 600 encoding jobs to free capacity. Encoding progress is lost and must restart later." },
+        { time: "04:00 UTC", event: "ML retraining pipeline finally gets resources and begins execution. However, models will not be ready before morning peak traffic." },
+        { time: "08:00 UTC", event: "Peak viewing hours begin with stale recommendation models. Personalization quality degrades, resulting in measurable drops in engagement metrics across 40M+ user sessions." }
+      ],
+      cause: "The batch queuing system used first-come-first-served admission with no preemption. Once encoding jobs were admitted and running, they held resources until completion regardless of waiting higher-priority workloads. The system lacked capacity borrowing (idle reserved quota in other tenant pools could not be shared) and had no priority-based eviction mechanism.",
+      lessons: [
+        "<strong>Preemption is Non-Negotiable:</strong> Any batch system at scale must support priority-based preemption — the ability to gracefully evict lower-priority workloads when higher-priority demand arrives.",
+        "<strong>Fair Sharing with Borrowing:</strong> Implement cohort-level capacity borrowing so idle reserved resources in one tenant's pool can be dynamically lent to others, preventing both waste and starvation.",
+        "<strong>Graceful Checkpointing:</strong> Design batch jobs to checkpoint progress periodically. When preempted, jobs should resume from the last checkpoint rather than restarting from scratch.",
+        "<strong>Priority Class Governance:</strong> Establish clear priority tiers (e.g., P0-Critical, P1-High, P2-Normal, P3-Background) with documented escalation policies for resource contention scenarios."
+      ]
     }
   ],
 
@@ -382,7 +551,12 @@ const contentData = {
     { quote: "A database partition will happen. Whether you choose consistency or availability is a business decision, not a network fluke.", author: "PACELC Truth" },
     { quote: "Automation is not about doing tasks faster. It is about removing the human error out of doing tasks at all.", author: "Ops Logic" },
     { quote: "Alert on symptoms that affect customers, not on infrastructure indicators that look scary on a graph.", author: "Monitoring Standard" },
-    { quote: "Complexity is the enemy of reliability. Build simple systems and let them scale naturally.", author: "Design Guideline" }
+    { quote: "Complexity is the enemy of reliability. Build simple systems and let them scale naturally.", author: "Design Guideline" },
+    { quote: "A batch system without preemption is a buffet where the first guest takes all the plates.", author: "Resource Management" },
+    { quote: "Fair sharing is not charity — it is the economic engine of multi-tenant infrastructure.", author: "Platform Engineering" },
+    { quote: "The difference between a queue and a backlog is whether someone is actively watching the drain rate.", author: "Batch Operations" },
+    { quote: "Migrate to community standards before your custom solution becomes the hardest legacy to maintain.", author: "Netflix Engineering (paraphrased)" },
+    { quote: "Reserved capacity without borrowing policies is just expensive idle hardware.", author: "Cloud Economics" }
   ],
 
   readinessChecklist: [
